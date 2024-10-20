@@ -12,28 +12,34 @@ if [ ! -x "$INOTIFY_WAIT" ]; then
   exit 1
 fi
 
-# Symlink files from home
-echo "Symlinking home files..."
+# Copy files from home instead of symlinking
+echo "Copying home files..."
 while IFS= read -r file; do
   src="$file"
-  dest="$REPO_DIR/home/${file#$HOME/}"
+  dest="$REPO_DIR/home/${file#$USER_HOME/}"
   if [ -f "$src" ]; then
     mkdir -p "$(dirname "$dest")"
-    ln -sf "$src" "$dest"
-    echo "Symlinked $src to $dest"
+    cp -f "$src" "$dest"  # Copy the actual file instead of creating symlink
+    echo "Copied $src to $dest"
   fi
 done < "$HOME_WATCHLIST"
 
-# Symlink files from /etc/nixos
-echo "Symlinking NixOS files..."
+# Copy files from /etc/nixos instead of symlinking
+echo "Copying NixOS files..."
 while IFS= read -r file; do
   src="$file"
   dest="$REPO_DIR/nixos/$(basename "$file")"
   if [ -f "$src" ]; then
     mkdir -p "$(dirname "$dest")"
-    ln -sf "$src" "$dest"
-    echo "Symlinked $src to $dest"
+    cp -f "$src" "$dest"  # Copy the actual file instead of creating symlink
+    echo "Copied $src to $dest"
   fi
 done < "$NIXOS_WATCHLIST"
 
+# Commit and push the changes to the Git repository
+echo "Pushing changes to Git..."
+cd "$REPO_DIR" || exit 1
+sudo -u arman git add .
+sudo -u arman git commit -m "Updated with latest files"
+sudo -u arman git push
 
