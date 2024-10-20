@@ -24,6 +24,7 @@ get_monitored_items() {
 }
 
 # Sync changes from home to repo with debounce
+# Sync changes from home to repo with debounce
 sync_home_to_repo() {
   current_time=$(date +%s)
   
@@ -45,10 +46,17 @@ sync_home_to_repo() {
   touch "$LOCKFILE"
 
   echo "Syncing home directory changes..."
-  rsync -av --ignore-missing-args --delete --relative \
-    --exclude="${EXCLUDE_PATTERNS[@]}" \
-    --files-from=<(get_monitored_items) "$USER_HOME/" "$REPO_DIR/home/"
   
+  # Build rsync command with multiple --exclude flags
+  RSYNC_CMD="rsync -av --ignore-missing-args --delete --relative"
+  for pattern in "${EXCLUDE_PATTERNS[@]}"; do
+    RSYNC_CMD+=" --exclude=$pattern"
+  done
+  RSYNC_CMD+=" --files-from=<(get_monitored_items) $USER_HOME/ $REPO_DIR/home/"
+
+  # Execute rsync command
+  eval $RSYNC_CMD
+
   # Commit and push changes
   sudo -u arman git -C "$REPO_DIR" add .
   sudo -u arman git -C "$REPO_DIR" commit -m "Auto-sync home files $(date)"
