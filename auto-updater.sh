@@ -10,6 +10,14 @@ DEBOUNCE_TIME=2 # debounce time in seconds
 last_sync_time_home=0
 last_sync_time_nixos=0
 
+
+# Exclude patterns for files you don't want to sync (e.g., browser cache files)
+EXCLUDE_PATTERNS=(
+  ".org.chromium.*"
+  "Cookies*"
+  "Cache/*"
+  "History*"
+)
 # Function to list files and directories to monitor in $HOME_DIR_REPO
 get_monitored_items() {
   find "$HOME_DIR_REPO" -type f -o -type d | sed "s|$HOME_DIR_REPO|$USER_HOME|g"
@@ -37,7 +45,9 @@ sync_home_to_repo() {
   touch "$LOCKFILE"
 
   echo "Syncing home directory changes..."
-  rsync -av --ignore-missing-args --delete --relative --files-from=<(get_monitored_items) "$USER_HOME/" "$REPO_DIR/home/"
+  rsync -av --ignore-missing-args --delete --relative \
+    --exclude="${EXCLUDE_PATTERNS[@]}" \
+    --files-from=<(get_monitored_items) "$USER_HOME/" "$REPO_DIR/home/"
   
   # Commit and push changes
   sudo -u arman git -C "$REPO_DIR" add .
