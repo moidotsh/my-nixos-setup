@@ -13,7 +13,7 @@ get_monitored_items() {
 # Sync changes from home to repo
 sync_home_to_repo() {
   echo "Syncing home directory changes..."
-  rsync -av --delete --relative --files-from=<(get_monitored_items) "$USER_HOME/" "$REPO_DIR/home/"
+  rsync -av --ignore-missing-args --delete --relative --files-from=<(get_monitored_items) "$USER_HOME/" "$REPO_DIR/home/"
   
   # Commit and push changes
   sudo -u arman git -C "$REPO_DIR" add .
