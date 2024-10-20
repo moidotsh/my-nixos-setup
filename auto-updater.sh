@@ -47,7 +47,12 @@ sync_home_to_repo() {
 
   echo "Syncing home directory changes..."
   
-  # Sync with absolute paths to ensure it's copying the correct files
+echo "Monitored items:"
+get_monitored_items
+
+echo "Syncing from $USER_HOME/ to $HOME_DIR_REPO/"
+
+# Sync with absolute paths to ensure it's copying the correct files
   rsync -av --ignore-missing-args --delete \
     --exclude="${EXCLUDE_PATTERNS[@]}" \
     --files-from=<(get_monitored_items) "$USER_HOME/" "$HOME_DIR_REPO/"
