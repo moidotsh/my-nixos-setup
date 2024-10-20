@@ -4,6 +4,7 @@ USER_HOME="/home/arman"
 REPO_DIR="$USER_HOME/my-nixos-setup"
 HOME_DIR_REPO="$REPO_DIR/home"
 NIXOS_DIR="/etc/nixos"
+LOCKFILE="$REPO_DIR/.sync.lock"
 
 # Function to list files and directories to monitor in $HOME_DIR_REPO
 get_monitored_items() {
@@ -12,6 +13,15 @@ get_monitored_items() {
 
 # Sync changes from home to repo
 sync_home_to_repo() {
+  # Check for lockfile
+  if [ -f "$LOCKFILE" ]; then
+    echo "Sync is already running, skipping..."
+    return
+  fi
+
+  # Create lockfile
+  touch "$LOCKFILE"
+
   echo "Syncing home directory changes..."
   rsync -av --ignore-missing-args --delete --relative --files-from=<(get_monitored_items) "$USER_HOME/" "$REPO_DIR/home/"
   
@@ -19,10 +29,22 @@ sync_home_to_repo() {
   sudo -u arman git -C "$REPO_DIR" add .
   sudo -u arman git -C "$REPO_DIR" commit -m "Auto-sync home files $(date)"
   sudo -u arman git -C "$REPO_DIR" push
+
+  # Remove lockfile
+  rm -f "$LOCKFILE"
 }
 
 # Sync changes from /etc/nixos to repo
 sync_nixos_to_repo() {
+  # Check for lockfile
+  if [ -f "$LOCKFILE" ]; then
+    echo "Sync is already running, skipping..."
+    return
+  fi
+
+  # Create lockfile
+  touch "$LOCKFILE"
+
   echo "Syncing NixOS directory changes..."
   sudo rsync -av --delete "$NIXOS_DIR/" "$REPO_DIR/nixos/"
   
@@ -30,6 +52,9 @@ sync_nixos_to_repo() {
   sudo -u arman git -C "$REPO_DIR" add .
   sudo -u arman git -C "$REPO_DIR" commit -m "Auto-sync NixOS files $(date)"
   sudo -u arman git -C "$REPO_DIR" push
+
+  # Remove lockfile
+  rm -f "$LOCKFILE"
 }
 
 # Start monitoring each file in the $HOME_DIR_REPO explicitly
