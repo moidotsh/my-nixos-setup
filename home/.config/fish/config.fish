@@ -16,6 +16,7 @@ alias ngc="sudo nix-collect-garbage -d"
 alias ngc7="sudo nix-collect-garbage --delete-older-than 7d"
 alias ngc14="sudo nix-collect-garbage --delete-older-than 14d"
 alias vim="nvim"
+alias pconfig="sudo ~/my-nixos-setup/symlink-files.sh"
 # 
 #####txx tst
 # if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]
