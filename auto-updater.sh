@@ -47,15 +47,10 @@ sync_home_to_repo() {
 
   echo "Syncing home directory changes..."
   
-  # Build rsync command with multiple --exclude flags
-  RSYNC_CMD="rsync -av --ignore-missing-args --delete --relative"
-  for pattern in "${EXCLUDE_PATTERNS[@]}"; do
-    RSYNC_CMD+=" --exclude=$pattern"
-  done
-  RSYNC_CMD+=" --files-from=<(get_monitored_items) $USER_HOME/ $REPO_DIR/home/"
-
-  # Execute rsync command
-  eval $RSYNC_CMD
+  # Sync with absolute paths to ensure it's copying the correct files
+  rsync -av --ignore-missing-args --delete \
+    --exclude="${EXCLUDE_PATTERNS[@]}" \
+    --files-from=<(get_monitored_items) "$USER_HOME/" "$HOME_DIR_REPO/"
 
   # Commit and push changes
   sudo -u arman git -C "$REPO_DIR" add .
@@ -65,6 +60,7 @@ sync_home_to_repo() {
   # Remove lockfile
   rm -f "$LOCKFILE"
 }
+
 
 # Sync changes from /etc/nixos to repo with debounce
 sync_nixos_to_repo() {
