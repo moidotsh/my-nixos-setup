@@ -1,1 +1,0 @@
-/home/arman/.config/fish/functions/wlogout_uniqe.fish

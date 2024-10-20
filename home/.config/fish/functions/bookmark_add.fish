@@ -1,1 +1,0 @@
-/home/arman/.config/fish/functions/bookmark_add.fish

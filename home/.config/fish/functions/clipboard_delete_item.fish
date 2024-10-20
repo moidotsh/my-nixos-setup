@@ -1,1 +1,0 @@
-/home/arman/.config/fish/functions/clipboard_delete_item.fish

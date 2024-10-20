@@ -1,1 +1,0 @@
-/home/arman/.config/nixpkgs/config.nix

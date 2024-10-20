@@ -1,1 +1,0 @@
-/home/arman/.config/fish/functions/dunst_pause.fish

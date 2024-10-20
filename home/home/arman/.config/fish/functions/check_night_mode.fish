@@ -1,1 +1,0 @@
-/home/arman/.config/fish/functions/check_night_mode.fish

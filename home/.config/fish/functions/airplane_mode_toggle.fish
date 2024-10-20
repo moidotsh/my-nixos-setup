@@ -1,1 +1,0 @@
-/home/arman/.config/fish/functions/airplane_mode_toggle.fish

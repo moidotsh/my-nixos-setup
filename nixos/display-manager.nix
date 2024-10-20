@@ -1,1 +1,0 @@
-/etc/nixos/display-manager.nix

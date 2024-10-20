@@ -1,1 +1,0 @@
-/home/arman/.config/fish/functions/clipboard_to_type.fish

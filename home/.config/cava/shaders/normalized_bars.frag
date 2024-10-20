@@ -1,1 +1,0 @@
-/home/arman/.config/cava/shaders/normalized_bars.frag

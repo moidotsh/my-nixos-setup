@@ -1,1 +1,0 @@
-/home/arman/.config/fish/functions/wifi_toggle.fish

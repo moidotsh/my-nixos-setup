@@ -1,1 +1,0 @@
-/home/arman/.config/fish/functions/file-preview.fish
