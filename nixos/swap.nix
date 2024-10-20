@@ -1,5 +1,1 @@
-{ ... }:
-
-{
-  zramSwap.enable = true;
-}
+/etc/nixos/swap.nix

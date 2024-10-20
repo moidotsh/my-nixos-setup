@@ -1,8 +1,1 @@
-{ ... }:
-
-{
-  # Nix Configuration
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];    
-  };
-}
+/etc/nixos/nix-settings.nix
