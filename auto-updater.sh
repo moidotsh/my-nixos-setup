@@ -5,14 +5,28 @@ REPO_DIR="$USER_HOME/my-nixos-setup"
 HOME_DIR_REPO="$REPO_DIR/home"
 NIXOS_DIR="/etc/nixos"
 LOCKFILE="$REPO_DIR/.sync.lock"
+DEBOUNCE_TIME=2 # debounce time in seconds
+
+last_sync_time_home=0
+last_sync_time_nixos=0
 
 # Function to list files and directories to monitor in $HOME_DIR_REPO
 get_monitored_items() {
   find "$HOME_DIR_REPO" -type f -o -type d | sed "s|$HOME_DIR_REPO|$USER_HOME|g"
 }
 
-# Sync changes from home to repo
+# Sync changes from home to repo with debounce
 sync_home_to_repo() {
+  current_time=$(date +%s)
+  
+  # Check debounce time
+  if (( current_time - last_sync_time_home < DEBOUNCE_TIME )); then
+    echo "Debounced: Too many home syncs in a short time."
+    return
+  fi
+
+  last_sync_time_home=$current_time
+  
   # Check for lockfile
   if [ -f "$LOCKFILE" ]; then
     echo "Sync is already running, skipping..."
@@ -34,8 +48,18 @@ sync_home_to_repo() {
   rm -f "$LOCKFILE"
 }
 
-# Sync changes from /etc/nixos to repo
+# Sync changes from /etc/nixos to repo with debounce
 sync_nixos_to_repo() {
+  current_time=$(date +%s)
+  
+  # Check debounce time
+  if (( current_time - last_sync_time_nixos < DEBOUNCE_TIME )); then
+    echo "Debounced: Too many NixOS syncs in a short time."
+    return
+  fi
+
+  last_sync_time_nixos=$current_time
+
   # Check for lockfile
   if [ -f "$LOCKFILE" ]; then
     echo "Sync is already running, skipping..."
