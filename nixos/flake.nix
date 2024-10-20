@@ -1,5 +1,5 @@
 {
-  description = "XNM's NixOS Configuration";
+  description = "NixOS Configuration";
 
   inputs = {
       Neve.url = "github:redyf/Neve";
