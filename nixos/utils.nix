@@ -19,5 +19,6 @@
     noto-fonts
     dejavu_fonts
     bun
+    tree
   ];
 }
