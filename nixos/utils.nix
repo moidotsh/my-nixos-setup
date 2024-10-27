@@ -20,5 +20,6 @@
     dejavu_fonts
     bun
     tree
+    supabase-cli
   ];
 }
