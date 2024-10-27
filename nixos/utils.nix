@@ -21,5 +21,6 @@
     bun
     tree
     supabase-cli
+    postgresql
   ];
 }
